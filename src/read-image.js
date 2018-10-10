@@ -3,12 +3,10 @@
 
 (function (register) {
   var NAME = 'read-image';
-  var container = document.querySelector('#photos');
+  var sourceInput = document.querySelector('#source');
 
   register(NAME, function () {
     var context = this;
-
-    var sourceInput = document.querySelector('#source');
 
     function onFile(ev) {
       var input = ev.target;
