@@ -14,6 +14,12 @@
       img.src = ev.dataUrl;
 
       img.onload = function () {
+        var w = img.naturalWidth;
+        var h = img.naturalHeight;
+
+        canvas.width = w;
+        canvas.height = h;
+
         ctx.drawImage(img, 0, 0);
       };
     }

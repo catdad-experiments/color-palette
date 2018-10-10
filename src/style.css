@@ -108,3 +108,7 @@ b {
 .hide {
   display: none;
 }
+
+canvas {
+  max-width: 100%;
+}
