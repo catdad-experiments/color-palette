@@ -15,6 +15,8 @@
 
       reader.onload = function () {
         var dataUrl = reader.result;
+
+        context.events.emit('new-image', { dataUrl: dataUrl });
       };
 
       reader.readAsDataURL(input.files[0]);

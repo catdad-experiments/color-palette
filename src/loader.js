@@ -107,17 +107,20 @@ window.addEventListener('load', function () {
   // load all the modules from the server directly
   Promise.all([
     loadScript('src/event-emitter.js'),
-    loadScript('src/read-image.js')
+    loadScript('src/read-image.js'),
+    loadScript('src/display-canvas.js'),
   ]).then(function () {
     // set up a global event emitter
     context.events = modules['event-emitter']();
 
     var readImageDestroy = modules['read-image']();
+    var displayCanvasDestroy = modules['display-canvas']();
 
     context.events.on('error', function (err) {
       onError(err);
 
       readImageDestroy();
+      displayCanvasDestroy();
     });
 
     context.events.on('warn', function (err) {
