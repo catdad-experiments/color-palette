@@ -1,0 +1,23 @@
+{
+  "name": "color-palette",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/catdad-experiments/color-palette.git"
+  },
+  "author": "Kiril Vatev <vatev.1@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/catdad-experiments/color-palette/issues"
+  },
+  "homepage": "https://github.com/catdad-experiments/color-palette#readme",
+  "devDependencies": {
+    "http-server": "^0.11.1"
+  }
+}
