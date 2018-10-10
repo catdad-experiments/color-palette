@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Color Palette</title>
+
+  <link rel="stylesheet" type="text/css" href="src/style.css">
+  <meta name="theme-color" content="#24292e">
+  <script src="/icons/favicon.js" async></script>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+  <header>
+    <div class="header-container">
+      <div class="limit">
+        <div id="prompt" class="prompt hide"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container limit">
+    <!--video is in the DOM, but will always be hidden-->
+    <video id="video" class="center" autoplay></video>
+
+    <div class="contents">
+      <!-- app content goes here -->
+      <!-- end app content -->
+    </div>
+
+  </div>
+
+  <footer>
+    <a href="https://github.com/catdad">
+      <i class="material-icons material-inline">code</i>
+      <span> with </span>
+      <i class="material-icons material-inline">favorite</i>
+      <span> by <b>catdad</b></span>
+    </a>
+  </footer>
+
+  <script src="src/loader.js"></script>
+  <script src="/analytics.js"></script>
+</body>
+
+</html>
