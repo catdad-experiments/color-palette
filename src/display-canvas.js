@@ -47,7 +47,8 @@
   }
 
   function hexToken(c) {
-    return ('0' + c.toString(16)).slice(-2);
+    var s = c.toString(16);
+    return s.length === 2 ? s : '0' + s;
   }
 
   function hexColor(r, g, b) {
@@ -59,9 +60,11 @@
     var colors = [];
     var rgb;
 
+    console.time('compute');
     for (var i = 0, l = values.length; i < l; i += 4) {
       colors.push(hexColor(values[i], values[i+1], values[i+2]));
     }
+    console.timeEnd('compute');
 
     return colors.reduce(function (memo, color) {
       if (memo[color]) {
@@ -78,26 +81,46 @@
     var context = this;
     var ctx = canvas.getContext('2d');
 
+    function blurReduce(elem, sx, sy, sw, sh, dx, dy, dw, dh) {
+      ctx.filter = 'blur(20px)';
+      ctx.drawImage(elem, sx, sy, sw, sh, dx, dy, dw, dh);
+
+      console.time('read data');
+      var imgData = ctx.getImageData(0, 0, dw, dh);
+      console.timeEnd('read data');
+
+      console.time('reduce colors');
+      var posterizedData = posterize(imgData, POSTERIZE_LEVEL);
+      console.timeEnd('reduce colors');
+
+      console.time('final draw');
+      ctx.putImageData(posterizedData, 0, 0);
+      console.timeEnd('final draw');
+    }
+
     function onImage(ev) {
       var img = new Image();
       img.src = ev.dataUrl;
 
       img.onload = function () {
-        var w = img.naturalWidth;
-        var h = img.naturalHeight;
+        var width = img.naturalWidth;
+        var height = img.naturalHeight;
+
+        var w = 600;
+        var h = height * 600 / width;
 
         canvas.width = w;
         canvas.height = h;
 
-        ctx.filter = 'blur(30px)';
-        ctx.drawImage(img, 0, 0);
+        blurReduce(img, 0, 0, width, height, 0, 0, w, h);
+//        blurReduce(canvas, 0, 0, w, h, 0, 0, w, h);
 
-        var imgData = ctx.getImageData(0, 0, w, h);
-        var posterizedData = posterize(imgData, POSTERIZE_LEVEL);
-        var colors = countColors(posterizedData);
-        ctx.putImageData(posterizedData, 0, 0);
+        var o = 50;
+        var imgData = ctx.getImageData(o, o, w - o, h - o);
+        var colors = countColors(imgData);
 
         console.log(colors);
+        console.log(Object.keys(colors).length, 'colors found');
       };
     }
 
