@@ -17,9 +17,8 @@
     var numAreas = 256 / numLevels;
     var numValues = 255 / (numLevels-1);
 
-    var rect = imgData;
-    var w = rect.width;
-    var h = rect.height;
+    var w = imgData.width;
+    var h = imgData.height;
     var w4 = w*4;
     var y = h;
 
@@ -47,7 +46,6 @@
     return imgData;
   }
 
-
   register(NAME, function () {
     var context = this;
     var ctx = canvas.getContext('2d');
@@ -63,11 +61,12 @@
         canvas.width = w;
         canvas.height = h;
 
+        ctx.filter = 'blur(30px)';
         ctx.drawImage(img, 0, 0);
+
 
         var imgData = ctx.getImageData(0, 0, w, h);
         var posterizedData = posterize(imgData, POSTERIZE_LEVEL);
-
         ctx.putImageData(posterizedData, 0, 0);
       };
     }
