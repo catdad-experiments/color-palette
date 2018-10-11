@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* global Promise */
+/* global Promise, StackBlur */
 
 (function (register) {
   var NAME = 'display-canvas';
@@ -77,6 +77,15 @@
     }, {});
   }
 
+  function topColors(obj) {
+    obj['#ffffff'] = 0;
+    obj['#000000'] = 0;
+
+    return Object.keys(obj).sort(function (a, b) {
+      return obj[b] - obj[a];
+    }).slice(0, 4);
+  }
+
   register(NAME, function () {
     var context = this;
     var ctx = canvas.getContext('2d');
@@ -87,6 +96,25 @@
 
       console.time('read data');
       var imgData = ctx.getImageData(0, 0, dw, dh);
+      console.timeEnd('read data');
+
+      console.time('reduce colors');
+      var posterizedData = posterize(imgData, POSTERIZE_LEVEL);
+      console.timeEnd('reduce colors');
+
+      console.time('final draw');
+      ctx.putImageData(posterizedData, 0, 0);
+      console.timeEnd('final draw');
+    }
+
+    function stackBlurReduce(img, width, height, w, h) {
+      // draw resized image, for speed... we don't need high-res
+      ctx.drawImage(img, 0, 0, width, height, 0, 0, w, h);
+
+      StackBlur.canvasRGB(canvas, 0, 0, w, h, 100);
+
+      console.time('read data');
+      var imgData = ctx.getImageData(0, 0, w, h);
       console.timeEnd('read data');
 
       console.time('reduce colors');
@@ -112,7 +140,8 @@
         canvas.width = w;
         canvas.height = h;
 
-        blurReduce(img, 0, 0, width, height, 0, 0, w, h);
+        stackBlurReduce(img, width, height, w, h);
+//        blurReduce(img, 0, 0, width, height, 0, 0, w, h);
 //        blurReduce(canvas, 0, 0, w, h, 0, 0, w, h);
 
         var o = 50;
@@ -121,6 +150,17 @@
 
         console.log(colors);
         console.log(Object.keys(colors).length, 'colors found');
+        console.log(topColors(colors));
+
+        var top = topColors(colors);
+
+        console.log(
+          '%c   %c   %c   %c   ',
+          'font-size: 40px; background:' + top[0],
+          'font-size: 40px; background:' + top[1],
+          'font-size: 40px; background:' + top[2],
+          'font-size: 40px; background:' + top[3]
+        );
       };
     }
 
