@@ -109,6 +109,10 @@ b {
   display: none;
 }
 
+.block {
+  display: block;
+}
+
 canvas {
   max-width: 100%;
 }
