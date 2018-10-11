@@ -46,6 +46,34 @@
     return imgData;
   }
 
+  function hexToken(c) {
+    return ('0' + c.toString(16)).slice(-2);
+  }
+
+  function hexColor(r, g, b) {
+    return '#' + hexToken(r) + hexToken(g) + hexToken(b);
+  }
+
+  function countColors(imgData) {
+    var values = imgData.data;
+    var colors = [];
+    var rgb;
+
+    for (var i = 0, l = values.length; i < l; i += 4) {
+      colors.push(hexColor(values[i], values[i+1], values[i+2]));
+    }
+
+    return colors.reduce(function (memo, color) {
+      if (memo[color]) {
+        memo[color] += 1;
+      } else {
+        memo[color] = 1;
+      }
+
+      return memo;
+    }, {});
+  }
+
   register(NAME, function () {
     var context = this;
     var ctx = canvas.getContext('2d');
@@ -64,10 +92,12 @@
         ctx.filter = 'blur(30px)';
         ctx.drawImage(img, 0, 0);
 
-
         var imgData = ctx.getImageData(0, 0, w, h);
         var posterizedData = posterize(imgData, POSTERIZE_LEVEL);
+        var colors = countColors(posterizedData);
         ctx.putImageData(posterizedData, 0, 0);
+
+        console.log(colors);
       };
     }
 
